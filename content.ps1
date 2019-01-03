@@ -1,50 +1,50 @@
 #
-# htmlƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚İA’Pƒ‚ÉƒeƒLƒXƒg‚Æ‚µ‚Äˆ—
-# •¶š’Šo‚µ‚Ä‚¤‚Ü‚¢‚±‚Æ‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚é
+# htmlãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã¿ã€å˜ç´”ã«ãƒ†ã‚­ã‚¹ãƒˆã¨ã—ã¦å‡¦ç†
+# æ–‡å­—æŠ½å‡ºã—ã¦ã†ã¾ã„ã“ã¨ã—ã‚ˆã†ã¨ã—ã¦ã„ã‚‹
 #
 
-# ƒtƒ@ƒCƒ‹‚Ì“Ç‚İA1s‚¸‚Âˆ—
-foreach ($l in Get-Content -Path C:/Users/m-oku/Downloads/Version+8084+Content+Release+Notes.html){
+# ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­è¾¼ã¿ã€1è¡Œãšã¤å‡¦ç†
+foreach ($l in Get-Content -Path hoeghoge/Version+8084+Content+Release+Notes.html){
     :	
 }
 
-# ³‹K•\Œ»‚Å,h3ƒ^ƒO‚ğŒŸõ
+# æ­£è¦è¡¨ç¾ã§,h3ã‚¿ã‚°ã‚’æ¤œç´¢
 # Select-String -Pattern "<h3>.*</h3>" -InputObject $l | % {$_.Matches.Value }
 $h3 = [RegEx]::Matches($l, "<h3>(\w|\s|-)+\(\d+\)<\/h3>")
 
-# €–Ú–¼‚ğƒŠƒXƒg‚Åæ“¾
+# é …ç›®åã‚’ãƒªã‚¹ãƒˆã§å–å¾—
 $sig_category = @()
 $sig_number_in_category = @()
 $sig_category = [RegEx]::Matches($h3.Value, "[A-Z]([a-zA-Z]|\s|-)+")
 $hoge = [RegEx]::Matches($h3.Value, "\(\d+\)")
 $sig_number_in_category = [RegEx]::Matches($hoge.Value, "\d+")
 
-# ŒŸõƒqƒbƒg‚µ‚½Œ‹‰Ê‚ÌƒCƒ“ƒfƒbƒNƒX‚ğƒŠƒXƒg‚Éæ“¾
+# æ¤œç´¢ãƒ’ãƒƒãƒˆã—ãŸçµæœã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ãƒªã‚¹ãƒˆã«å–å¾—
 $index = @()
 $h3 | % {
 	$index = $h3.Index
 }
 
-# index‚©‚çh3ƒ^ƒO•Ê‚ÉƒŠƒXƒgì¬
+# indexã‹ã‚‰h3ã‚¿ã‚°åˆ¥ã«ãƒªã‚¹ãƒˆä½œæˆ
 $strings = @()
 for($i=0; $i -lt $index.Count; $i++){
     $number = $index[$i]
-    # ÅŒã‚ÌƒJƒeƒSƒŠ‚ÌƒVƒOƒlƒ`ƒƒ‚ğ’Šo
+    # æœ€å¾Œã®ã‚«ãƒ†ã‚´ãƒªã®ã‚·ã‚°ãƒãƒãƒ£ã‚’æŠ½å‡º
 	if($i -eq $index.Count-1){
 		# $strings.Add($sig_category[$i].Value, $l.SubString($index[$i], $l.Length-$index[$i]))
 		$strings += $l.SubString($number, $l.Length-$number)
 	}
-    else{@ # ÅŒãˆÈŠO‚Ì‚ÌƒJƒeƒSƒŠ‚ÌƒVƒOƒlƒ`ƒƒ‚ğ’Šo
+    else{ã€€ # æœ€å¾Œä»¥å¤–ã®ã‚«ãƒ†ã‚´ãƒªã®ã‚·ã‚°ãƒãƒãƒ£ã‚’æŠ½å‡º
 		# $strings.Add($sig_category[$i].Value, $l.SubString($index[$i], $index[$i+1]-$index[$i]))
 		$strings += $l.SubString($number, $index[$i+1]-$number)
 	}
 }
 
-# h3‚ÌƒŠƒXƒg‚©‚çƒ^ƒO—v‘f‚Ìíœ
+# h3ã®ãƒªã‚¹ãƒˆã‹ã‚‰ã‚¿ã‚°è¦ç´ ã®å‰Šé™¤
 $value_list = @()
 foreach($s in $strings){
     $td = [RegEx]::Matches($s, ">((\w|-)+<br\/>)*(\w|\s|-|\.|\/)*<\/td")
-	# ƒ^ƒu—v‘f‚Ì”rœ
+	# ã‚¿ãƒ–è¦ç´ ã®æ’é™¤
 	foreach($value in $td.Value){
 	    $value = $value.Replace(">", "")
 	    $value = $value.Replace("<br/", ",")
@@ -52,26 +52,26 @@ foreach($s in $strings){
     }
 }
 
-# ƒGƒNƒZƒ‹‚Ö‚Ì‘
-# ƒJƒeƒSƒŠ–¼‚ÅƒV[ƒg‚ğ‚í‚¯‚é
+# ã‚¨ã‚¯ã‚»ãƒ«ã¸ã®æ›¸è¾¼
+# ã‚«ãƒ†ã‚´ãƒªåã§ã‚·ãƒ¼ãƒˆã‚’ã‚ã‘ã‚‹
 $excel = New-Object -ComObject Excel.Application
 $excel.Visible = $True
 $book = $excel.Workbooks.Add()
 
 $j = 0
 
-# ƒJƒeƒSƒŠ[‚²‚Æ‚Ìƒ‹[ƒvˆ—
+# ã‚«ãƒ†ã‚´ãƒªãƒ¼ã”ã¨ã®ãƒ«ãƒ¼ãƒ—å‡¦ç†
 foreach($category_name in $sig_category.value){
 
     $i = 0
-    $sig_number = 0 # ƒVƒOƒlƒ`ƒƒ”‚ÌƒJƒEƒ“ƒg
+    $sig_number = 0 # ã‚·ã‚°ãƒãƒãƒ£æ•°ã®ã‚«ã‚¦ãƒ³ãƒˆ
     $row = 0
     $column = 1
 
     $excel.WorkSheets.Add()
     $sheet = $excel.WorkSheets.item(1)
     
-    # sheet‚Ì•¶š”§ŒÀ‚É‘Î‰
+    # sheetã®æ–‡å­—æ•°åˆ¶é™ã«å¯¾å¿œ
     if($category_name.Length -ge 32){
         $sheet.name = $category_name.Substring(0,31)
     }
@@ -79,19 +79,19 @@ foreach($category_name in $sig_category.value){
         $sheet.name = $category_name
     }
 
-    # intŒ^‚ğw’è
+    # intå‹ã‚’æŒ‡å®š
     [System.Int32] $tmp = $sig_number_in_category[$j].Value
     $tmp = $tmp+1
 
-    # Še—v‘f‚ğ“ü—Í
+    # å„è¦ç´ ã‚’å…¥åŠ›
     foreach($value in $value_list){
-        # ƒVƒrƒŠƒeƒB[‚ª—ˆ‚½‚çŸ‚Ìs‚ÉˆÚ“®
+        # ã‚·ãƒ“ãƒªãƒ†ã‚£ãƒ¼ãŒæ¥ãŸã‚‰æ¬¡ã®è¡Œã«ç§»å‹•
         if($value -match "(critical|informational|high|medium)"){
 		    $row++
 		    $column = 1
             $sig_number++
         }
-        # ƒJƒeƒSƒŠ[‚ÉŠÜ‚Ü‚ê‚éƒVƒOƒlƒ`ƒƒ”‚Ü‚Å‹L“ü‚µ‚½‚çƒ‹[ƒv‚ğ”²‚¯‚é
+        # ã‚«ãƒ†ã‚´ãƒªãƒ¼ã«å«ã¾ã‚Œã‚‹ã‚·ã‚°ãƒãƒãƒ£æ•°ã¾ã§è¨˜å…¥ã—ãŸã‚‰ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹
         if($sig_number -eq $tmp){
            break
         }
