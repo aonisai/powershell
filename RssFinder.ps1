@@ -1,11 +1,15 @@
-﻿Param(
+Param(
     [string]$search_word = "indicators*\s*of\s*compromise",
     [string]$search_word_02 = "ioc",
     [int]$search_days_arg = 30, # 何日前まで取得するか指定, デフォルトは30日
     [parameter(mandatory=$true)]$rss_list_arg # 調査rssのリスト(txt), 必須
 )
 
+$wc = New-Object System.Net.WebClient
+$wc.Encoding = [System.Text.Encoding]::UTF8
+
 function Find-Match{
+    # 日付の比較
     If($search_days -le $date){
         $wc_all = $wc.DownloadString($item.link.Trim())
         if($wc_all | Select-String -Pattern $search_word){
@@ -33,14 +37,9 @@ If([string]::IsNullOrEmpty($search_days_arg)){
     $search_days = (Get-Date).AddDays(-$search_days_arg)
 }
 
-$cli = New-Object System.Net.WebClient
-$cli.Encoding = [System.Text.Encoding]::UTF8
-$wc = New-Object System.Net.WebClient
-$wc.Encoding = [System.Text.Encoding]::UTF8
-
 # rssリストのループ
 foreach($rss in $rss_list){
-    $rss = [xml]$cli.DownloadString($rss)
+    $rss = [xml]$wc.DownloadString($rss)
     if($rss.rss -ne $null){ # rss=2.0
         "========================================"
         "blog_title:" + $rss.rss.channel.title + ""
