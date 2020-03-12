@@ -1,5 +1,5 @@
-﻿Param(
-    [string]$search_word = "indicators*\s*of\s*compromise", # 検索ワード
+Param(
+    [parameter(mandatory=$true)][string]$search_word, # 検索ワード
     [int]$search_days_arg = 30, # 何日前まで取得するか指定, デフォルトは30日
     [parameter(mandatory=$true)]$rss_list_arg # 調査rssのリスト(txt), 必須
 )
@@ -36,7 +36,7 @@ If([string]::IsNullOrEmpty($search_days_arg)){
 foreach($rss in $rss_list){
     $rss = [xml]$wc.DownloadString($rss)
     if($rss.rss -ne $null){ # rss=2.0
-        "blog_title:" + $rss.rss.channel.title + ""
+        "rss_title:" + $rss.rss.channel.title + ""
         "----------------------------------------"
         foreach($item in $rss.rss.channel.item){
             # 日付の比較
